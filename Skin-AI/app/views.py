@@ -224,5 +224,5 @@ def index_view(request):
     return render(request, "index.html")
 def landing_view(request):
     return render(request, "landing.html")
-def page_404(request, exception):
-    return render(request, "404.html", status=404)
+def tutorial(request):
+    return render(request, "video.html")

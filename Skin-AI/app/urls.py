@@ -15,6 +15,6 @@ urlpatterns = [
     path('login/',login_view, name='login'),       
     path('SkinAI/', index_view, name='index'),  
     path('welcome/', landing_view, name='landing'),
-    path('404/', page_404, name='error_404'),
+    path('tut/', tutorial, name='error_404'),
     
 ] +static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
