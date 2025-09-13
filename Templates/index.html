@@ -1,0 +1,243 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SkinAI - Skin Health Analysis</title>
+    <link rel="stylesheet" href="{% static 'CSS/styles.css' %}">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- sidebar-->
+    <aside class="sidebar">
+    <div class="logo">
+        <img src="{% static 'IMAGES/logo.png' %}" alt="SkinAI Logo" style="width:70px; height:70px; margin-right:0px; border-radius:50%;    ">
+        <h1>SkinAI</h1>
+    </div>
+        
+        <nav class="nav-links">
+            <a href="#home" class="nav-link active">
+                <i class="fas fa-home"></i>
+                <span class="link-text">Home</span>
+            </a>
+            <a href="#diagnosis" class="nav-link">
+                <i class="fas fa-diagnoses"></i>
+                <span class="link-text">Diagnosis</span>
+            </a>
+            <a href="#history" class="nav-link">
+                <i class="fas fa-history"></i>
+                <span class="link-text">History</span>
+            </a>
+            <a href="#education" class="nav-link">
+                <i class="fas fa-book-medical"></i>
+                <span class="link-text">Education</span>
+            </a>
+            <a href="#profile" class="nav-link">
+                <i class="fas fa-user-circle"></i>
+                <span class="link-text">Profile</span>
+            </a>
+        </nav>
+        
+        <div class="sidebar-footer">
+            <button id="collapseBtn" class="footer-btn">
+                <i class="fas fa-chevron-left"></i>
+                <span class="link-text">Collapse</span>
+            </button>
+            <button id="darkModeToggle" class="footer-btn">
+                <i class="fas fa-moon"></i>
+                <span class="link-text">Dark Mode</span>
+            </button>
+            <button id="logoutBtn" class="footer-btn">
+                <i class="fas fa-sign-out-alt"></i>
+                <span class="link-text">Logout</span>
+            </button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="header">
+            <div class="header-content">
+                <h2 id="pageTitle">Home</h2>
+                <div class="language-toggle">
+                    <button id="languageBtn" class="lang-btn">
+                        <i class="fas fa-globe"></i>
+                        <span>EN</span>
+                    </button>
+                </div>
+            </div>
+        </header>
+        <section id="home" class="page-section active">
+            <div class="hero-section">
+                <div class="glass-card hero-card">
+                    <h2 data-translate="Advanced Skin Analysis with AI">Advanced Skin Analysis with AI</h2>
+                    <p data-translate="Upload an image of your skin to get instant analysis and recommendations from our advanced AI system.">Upload an image of your skin to get instant analysis and recommendations from our advanced AI system.</p>
+                    <div class="hero-features">
+                        <div class="feature">
+                            <i class="fas fa-clock"></i>
+                            <h4 data-translate="Instant Results">Instant Results</h4>
+                            <p data-translate="Get analysis in seconds">Get analysis in seconds</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-shield-alt"></i>
+                            <h4 data-translate="Privacy First">Privacy First</h4>
+                            <p data-translate="Your data is always secure">Your data is always secure</p>
+                        </div>
+                        <div class="feature">
+                            <i class="fas fa-stethoscope"></i>
+                            <h4 data-translate="Medical Grade">Medical Grade</h4>
+                            <p data-translate="Powered by dermatologist insights">Powered by dermatologist insights</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="quick-actions">
+                <div class="glass-card action-card" onclick="navigateTo('diagnosis')">
+                    <i class="fas fa-camera"></i>
+                    <h3 data-translate="Skin Analysis">Skin Analysis</h3>
+                    <p data-translate="Upload an image for instant diagnosis">Upload an image for instant diagnosis</p>
+                </div>
+                <div class="glass-card action-card" onclick="navigateTo('education')">
+                    <i class="fas fa-book-medical"></i>
+                    <h3 data-translate="Learn About Conditions">Learn About Conditions</h3>
+                    <p data-translate="Understand various skin conditions">Understand various skin conditions</p>
+                </div>
+                <div class="glass-card action-card" onclick="navigateTo('history')">
+                    <i class="fas fa-history"></i>
+                    <h3 data-translate="View History">View History</h3>
+                    <p data-translate="Check your previous analyses">Check your previous analyses</p>
+                </div>
+            </div>
+        </section>
+        <section id="diagnosis" class="page-section">
+            <div class="glass-card diagnosis-card">
+                <h2 data-translate="AI Skin Analysis">AI Skin Analysis</h2>
+                <div class="upload-area" id="uploadContainer">
+                    <i class="fas fa-cloud-upload-alt"></i>
+                    <h3 data-translate="Upload Your Skin Image">Upload Your Skin Image</h3>
+                    <p data-translate="Drag and drop your image here or click to browse">Drag and drop your image here or click to browse</p>
+                    <small data-translate="Supports JPG, PNG, GIF up to 10MB">Supports JPG, PNG, GIF up to 10MB</small>
+                    <input type="file" id="fileInput" class="file-input" accept="image/*">
+                </div>
+                <div class="results-container hidden" id="resultsContainer">
+                </div>
+            </div>
+        </section>
+
+        <section id="history" class="page-section">
+            <div class="glass-card history-card">
+                <div class="history-header">
+                    <h2 data-translate="Medical History">Medical History</h2>
+                    <span class="history-count">3 <span data-translate="records">records</span></span>
+                </div>
+                
+                <div class="history-list" id="medicalHistory">
+                </div>
+            </div>
+        </section>
+        <section id="education" class="page-section">
+            <div class="education-header">
+                <h2 data-translate="Skin Health Education">Skin Health Education</h2>
+                <span>6 <span data-translate="conditions">conditions</span></span>
+            </div>
+            <div class="diseases-grid" id="diseasesContainer">
+            </div>
+        </section>
+        <section class="results-section" style="display: none;">
+            <div class="container">
+                <div class="results-grid">
+                    <div class="image-section">
+                        <h3>Uploaded Image</h3>
+                        <div class="result-image">
+                            <img id="result-image" src="" alt="Analysis Result">
+                        </div>
+                    </div>
+                    <div class="analysis-section">
+                        <div class="condition">
+                            <div class="condition-name" id="condition-name">Condition Name</div>
+                            <div class="severity-badge" id="severity-badge">Severity</div>
+                        </div>
+                        <div class="confidence-meter">
+                            <div class="confidence-header">
+                                <span>Confidence Level</span>
+                                <span class="confidence-value" id="confidence-value">0%</span>
+                            </div>
+                            <div class="confidence-bar">
+                                <div class="confidence-fill" style="width: 0%"></div>
+                            </div>
+                            <p class="confidence-description" id="confidence-description">Analyzing confidence level...</p>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="action-btn research-btn" id="research-btn">
+                                <i class="fas fa-search"></i> Research Condition
+                            </button>
+                            <button class="action-btn download-btn" id="download-btn">
+                                <i class="fas fa-download"></i> Download Report
+                            </button>
+                            <button class="action-btn new-analysis-btn" id="new-analysis-btn">
+                                <i class="fas fa-redo"></i> New Analysis
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="profile" class="page-section">
+            <div class="glass-card profile-card">
+                <div class="profile-header">
+                    <div class="profile-avatar">
+                        <i class="fas fa-user-circle"></i>
+                    </div>
+                    <h2 data-translate="User Profile">User Profile</h2>
+                    <p data-translate="Manage your account settings and preferences">Manage your account settings and preferences</p>
+                </div>
+                
+                <div class="profile-content">
+                    <div class="profile-section">
+                        <h3 data-translate="Account Information">Account Information</h3>
+                        <div class="info-group">
+                            <label data-translate="Full Name">Full Name</label>
+                            <div class="info-value"></div>
+                        </div>
+                        <div class="info-group">
+                            <label data-translate="Email">Email</label>
+                            <div class="info-value"></div>
+                        </div>
+                       
+                    </div>
+                    
+                    <div class="profile-section">
+                        <h3 data-translate="App Settings">App Settings</h3>
+                        <div class="preference-item">
+                            <span data-translate="Dark Mode">Dark Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" id="profileDarkMode">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="preference-item">
+                            <span data-translate="Language">Language</span>
+                            <select id="languageSelect" class="language-select">
+                                <option value="en">English</option>
+                                <option value="ar">العربية</option>
+                            </select>
+                        </div>
+                        <div class="preference-item">
+                            <span data-translate="Data Saving Mode">Data Saving Mode</span>
+                            <label class="switch">
+                                <input type="checkbox">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+
+            </div>
+        </section>
+    </main>
+
+    <script src="{% static 'JS/script.js' %}"></script>
+</body>
+</html>
