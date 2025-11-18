@@ -56,7 +56,7 @@ tested and used immediately.
 
     ``` bash
     git clone https://github.com/ikxo3/SkinAI.git
-    cd skinai
+    cd SkinAI
     ```
 
 2.  Create a virtual environment and install requirements:
@@ -89,12 +89,12 @@ tested and used immediately.
 ## 📂 Project Structure
 
     SkinAI/
-    │── backend/        # Django project & APIs
-    │── frontend/       # HTML, CSS, JS files
-    │── models/         # Trained YOLO model (best.pt)
-    │── static/         # Static assets (CSS, JS, images)
-    │── templates/      # Frontend templates
-    │── requirements.txt
+    │── app/ # Django project & APIs
+    │── skinAI/       
+    │── Templates/       
+    │── ModelAI/         # Trained YOLO model (best.pt)
+    │── static/        
+    │── req.txt
     │── manage.py
     │── README.md
 
@@ -111,7 +111,7 @@ tested and used immediately.
 
 ## 👨‍💻 Author
 
-Developed by **\[Your Name\]**\
+Developed by **\[KADRI Mohammed Imad Eddine\]**\
 An AI engineering student passionate about building real-world
 applications in artificial intelligence, computer vision, and web
 technologies.
