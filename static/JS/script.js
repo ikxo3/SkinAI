@@ -84,7 +84,7 @@ const arabicTranslations = {
     'Please try again later': 'يرجى المحاولة مرة أخرى لاحقًا'
 };
 
-const API_BASE_URL = 'http://127.0.0.1:8000'; 
+const API_BASE_URL = 'http://localhost:8000/'; 
 
 document.addEventListener('DOMContentLoaded', function() {
     initApp();

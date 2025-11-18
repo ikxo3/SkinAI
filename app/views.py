@@ -104,42 +104,48 @@ class SkinImageViewSet(viewsets.ModelViewSet):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     @action(detail=False, methods=['GET'], permission_classes=[IsAuthenticated])
     def tretement(self, request):
-        print(f"Using model: {MODEL_PATH}")
-
-        image_id = request.query_params.get('image_id')
+        image_id = request.GET.get('image_id')
+        
         if not image_id:
-            return Response({"detail": "Image ID is required"}, status=status.HTTP_400_BAD_REQUEST)
+            return Response({"error": "image_id is required"}, status=status.HTTP_400_BAD_REQUEST)
         
-        skin_image = get_object_or_404(SkinImage, id=image_id, user=request.user)
-        save_path, diagnosis = process_image(skin_image.image.path, MODEL_PATH)
-        if isinstance(diagnosis, str):
-            return Response({"detail": diagnosis}, status=status.HTTP_400_BAD_REQUEST)
-        
-        history = History.objects.create(
-            user=request.user,
-            image=skin_image,
-            analysis_result=diagnosis['class_name'],
-            confidence=round(diagnosis['conf'] * 100, 2)
-        )
-        
-        result_data = {
-            "image_path": skin_image.image.url if skin_image.image else None,
-            "diagnosis": [
-                {
-                    "class_name": diagnosis['class_name'],
-                    "conf": round(diagnosis['conf'] * 100, 2)  
+        try:
+            skin_image = SkinImage.objects.get(id=image_id, user=request.user)
+            
+            image_path = skin_image.image.path
+            output_path, diagnosis = process_image(
+                image_path=image_path,
+                model_path=MODEL_PATH,
+                conf_threshold=CONFIDENCE_THRESHOLD,
+                save_path=f"processed_{skin_image.id}.jpg"
+            )
+            
+            confidence_value = diagnosis.get('conf', 0)
+            confidence_percentage = round(confidence_value * 100, 2)  
+            diagnosis['conf'] = confidence_percentage
+            history = History.objects.create(
+                user=request.user,
+                image=skin_image,
+                analysis_result=diagnosis.get('class_name', 'Unknown'),
+                confidence=confidence_percentage  
+            )
+            
+            return Response({
+                "image_path": skin_image.image.url,
+                "diagnosis": [diagnosis],
+                "history": {
+                    "id": history.id,
+                    "analysis_result": history.analysis_result,
+                    "confidence": history.confidence,  # الآن ستكون كنسبة مئوية
+                    "image_url": skin_image.image.url,
+                    "date": history.created_at.strftime("%Y-%m-%d %H:%M")
                 }
-            ],
-            "history": {
-                "id": history.id,
-                "analysis_result": history.analysis_result,
-                "confidence": round(history.confidence, 2) ,
-                "created_at": history.created_at,
-                "image_url": skin_image.image.url if skin_image.image else None
-            }
-        }
-        
-        return Response(result_data, status=status.HTTP_200_OK)
+            }, status=status.HTTP_200_OK)
+            
+        except SkinImage.DoesNotExist:
+            return Response({"error": "Image not found"}, status=status.HTTP_404_NOT_FOUND)
+        except Exception as e:
+            return Response({"error": f"Processing failed: {str(e)}"}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 class HistoryViewSet(viewsets.ModelViewSet):
     queryset = History.objects.all()
     serializer_class = HistorySerializer
